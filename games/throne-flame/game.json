@@ -1,0 +1,9 @@
+{
+  "name": "Throne & Flame",
+  "consumable": "Season",
+  "price": "10000000000000000000",
+  "outcomes": [
+    { "name": "Season", "chanceBps": 9900, "reward": "0" },
+    { "name": "Rekindle", "chanceBps": 100, "reward": "10000000000000000000" }
+  ]
+}

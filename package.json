@@ -1,0 +1,33 @@
+{
+  "name": "throne-flame",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "license": "Apache-2.0",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:balance": "vitest run --config vitest.balance.config.ts",
+    "check": "friendsdk check games/throne-flame",
+    "build": "friendsdk build games/throne-flame",
+    "dev": "friendsdk dev games/throne-flame",
+    "test:browser": "node tests/browser/smoke.mjs",
+    "capture:gif": "node tests/browser/capture-gif.mjs"
+  },
+  "dependencies": {
+    "@rarefriends/friendsdk": "file:vendor/rarefriends-friendsdk-0.1.2.tgz",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.4",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "gifenc": "^1.0.3",
+    "playwright": "^1.63.0",
+    "pngjs": "^7.0.0",
+    "typescript": "~5.9",
+    "vitest": "^4.1.11"
+  }
+}

@@ -1,0 +1,91 @@
+@font-face { font-family: 'Silkscreen'; src: url('./fonts/silkscreen-latin-400-normal.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Archivo Variable'; src: url('./fonts/archivo-latin-wght-normal.woff2') format('woff2-variations'); font-weight: 100 900; font-display: swap; }
+/* rarefriends.com tokens, light theme. */
+:root { --ink: #111; --paper: #eee; --signal: #cf0; --ink-60: #666; --ink-30: #b0b0b0; }
+html, body, #root { margin: 0; height: 100%; background: var(--paper); color: var(--ink); }
+* { box-sizing: border-box; }
+.tf-root { height: 100%; padding: 1em 1em max(4.8em, 68px); font: clamp(12px, 1.5vw, 22px)/1.45 'Archivo Variable', system-ui, sans-serif; overflow: auto; }
+.tf-root.tf-playing { padding: 0; overflow: hidden; }
+h1, h2, .tf-btn, .tf-hud, kbd { font-family: 'Silkscreen', monospace; font-weight: 400; }
+h1 { font-size: 2em; margin: 0; line-height: 1; }
+h2 { font-size: 1.1em; margin: 0 0 .5em; }
+.tf-muted { color: var(--ink-60); margin: .25em 0 .75em; }
+.tf-fine { color: var(--ink-60); font-size: .78em; }
+.tf-status { padding: 1.5em; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.tf-btn { font-size: .9em; color: var(--ink); background: var(--paper); border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); padding: .5em .8em; cursor: pointer; margin: .25em .5em .25em 0; }
+.tf-btn:hover:not(:disabled) { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink); }
+.tf-btn:active:not(:disabled) { transform: translate(3px, 3px); box-shadow: none; }
+.tf-btn:disabled { color: var(--ink-30); border-style: dashed; box-shadow: none; cursor: not-allowed; } /* 1-bit: no transparency */
+.tf-primary { background: var(--signal); }
+
+.tf-title { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.tf-title header { display: flex; align-items: center; gap: 1em; flex-wrap: wrap; }
+.tf-title header .tf-muted { margin: 0; }
+.tf-logo { display: block; height: 39px; width: auto; image-rendering: pixelated; } /* 13 px tall at 3× */
+.tf-title-grid { flex: 1 1 auto; min-height: 0; overflow: auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 1em; margin: .75em 0 .25em; padding: 0 6px 6px 0; align-items: start; }
+.tf-card { border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); padding: .9em; background: var(--paper); }
+.tf-friend { display: flex; gap: .9em; align-items: flex-start; }
+.tf-portrait { width: 148px; height: 148px; image-rendering: pixelated; display: block; border: 2px solid var(--ink); flex: none; }
+.tf-rules { margin: 0; padding-left: 1.2em; display: grid; gap: .45em; }
+.tf-start { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .1em .75em; text-align: center; }
+.tf-start .tf-fine, .tf-status-line { flex-basis: 100%; margin: .25em 0; }
+.tf-start-btn { font-size: 1.2em; padding: .65em 1.8em; box-shadow: 4px 4px 0 var(--ink); }
+@media (max-width: 560px) {
+  .tf-title-grid { grid-template-columns: 1fr; }
+  .tf-portrait { width: 76px; height: 76px; }
+  .tf-logo { height: 26px; }
+}
+
+/* Season: the 480×320 scene at a whole-number scale; every number in the DOM on top of it. */
+.tf-stage { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; background: var(--paper); overflow: hidden; outline: none; --u: 1; }
+.tf-scene { position: relative; flex: none; }
+.tf-canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
+/* Silkscreen is an 8 px pixel font: HUD text is 8 px × the scene scale, so its glyph pixels match the art's. */
+.tf-hud { position: absolute; inset: 0; pointer-events: none; font: calc(8px * var(--u))/1.25 'Silkscreen', monospace; }
+.tf-hud-top { position: absolute; z-index: 2; top: 4px; left: 4px; right: 4px; display: flex; justify-content: space-between; align-items: flex-start; gap: 1em; pointer-events: none; font: calc(8px * var(--u))/1.25 'Silkscreen', monospace; }
+.tf-hint { position: absolute; z-index: 2; left: 50%; bottom: 120px; transform: translateX(-50%); margin: 0; background: var(--ink); color: var(--paper); padding: .3em .6em; font: 8px/1.4 'Silkscreen', monospace; font-size: calc(8px * var(--u)); }
+.tf-logbtn { position: relative; display: inline-block; }
+.tf-cool { position: absolute; left: 0; bottom: -5px; height: 3px; background: var(--ink); }
+.tf-round { background: var(--paper); border: 2px solid var(--ink); padding: .1em .4em; }
+.tf-feed { flex: 1; text-align: center; }
+.tf-feed > span { display: inline-block; background: var(--paper); border: 2px solid var(--ink); padding: .1em .4em; } /* readable over the night sky */
+.tf-burned { display: flex; flex-direction: column; align-items: flex-end; background: var(--ink); color: var(--signal); padding: .2em .5em; }
+.tf-burned small { color: var(--paper); }
+.tf-tag { position: absolute; transform: translate(-50%, -100%); background: var(--paper); border: 2px solid var(--ink); padding: .1em .4em; white-space: nowrap; text-align: center; }
+.tf-tag small { color: var(--ink-60); }
+.tf-you { background: var(--signal); }
+.tf-tag .tf-mark { color: var(--ink); }
+.tf-out { color: var(--ink-60); border-style: dashed; }
+.tf-low { background: var(--ink); color: var(--signal); padding: 0 .2em; }
+.tf-banner { position: absolute; transform: translate(-50%, -50%); background: var(--ink); color: var(--signal); padding: .4em .8em; white-space: nowrap; }
+.tf-actions { position: absolute; left: 50%; bottom: 64px; transform: translateX(-50%); display: flex; flex-direction: column; gap: .3em; align-items: center; background: var(--paper); border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); padding: .3em .6em; font-size: clamp(10px, 1.3vw, 16px); white-space: nowrap; }
+.tf-actions .tf-btn { margin: 0; }
+.tf-actions-row { display: flex; gap: .5em; align-items: center; }
+.tf-actions-info { font-family: 'Archivo Variable', sans-serif; color: var(--ink-60); font-size: .8em; min-height: 1.3em; }
+.tf-price { display: inline-flex; gap: .35em; align-items: center; font-family: 'Silkscreen', monospace; }
+.tf-price b { display: inline-block; min-width: 5.5em; text-align: center; } /* fixed width: 0.5 RF and 12.3 RF take the same room */
+.tf-menu { position: absolute; inset: 0 0 64px; display: grid; place-items: center; }
+.tf-menu-card { display: flex; flex-direction: column; align-items: stretch; gap: .4em; max-width: 30em; max-height: calc(100% - 76px); overflow: auto; box-shadow: 6px 6px 0 var(--ink); }
+/* Portrait (phones; host.css turns the frame 3:4 under 560 px): the bar sits under the scene, above the runtime toolbar. */
+@media (max-aspect-ratio: 1/1) {
+  .tf-actions { position: static; transform: none; margin: .6em auto 64px; white-space: normal; }
+  .tf-actions-row { flex-wrap: wrap; justify-content: center; }
+  .tf-name { display: none; }
+  .tf-tag small { display: none; }
+  .tf-hud-top { flex-wrap: wrap; } /* the burn breakdown stays visible (spec §1) */
+  .tf-hint { bottom: auto; top: calc(320px + 8px); }
+}
+
+.tf-results { display: flex; flex-direction: column; gap: .8em; }
+.tf-results-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1em; padding: 0 6px 6px 0; }
+.tf-table { width: 100%; border-collapse: collapse; font-family: 'Silkscreen', monospace; font-size: .8em; }
+.tf-table th, .tf-table td { text-align: left; padding: .2em .3em; border-bottom: 1px solid var(--ink-30); }
+.tf-you-row { background: var(--signal); }
+.tf-stats { display: grid; grid-template-columns: auto 1fr; gap: .25em .8em; margin: 0; }
+.tf-stats dt { color: var(--ink-60); } .tf-stats dd { margin: 0; font-family: 'Silkscreen', monospace; }
+.tf-burn-card { background: var(--ink); color: var(--paper); }
+.tf-burn-card .tf-fine { color: var(--ink-30); }
+.tf-big { font: 2em/1 'Silkscreen', monospace; color: var(--signal); margin: .2em 0; }
+.tf-ticket { max-width: 36em; }
+@media (max-width: 760px) { .tf-results-grid { grid-template-columns: 1fr; } }

@@ -1,0 +1,4 @@
+node_modules/
+games/throne-flame/.friendsdk/
+.play-local/
+test-results/
